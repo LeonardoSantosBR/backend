@@ -84,6 +84,27 @@ model Supply {
   @@map("supplies")
 }
 
+model Questions {
+  id        Int     @id @default(autoincrement())
+  shelterId String  @map("shelter_id")
+  order     String? @db.VarChar(20)
+  question  String?
+  createdAt String  @map("created_at") @db.VarChar(32)
+  updatedAt String? @map("updated_at") @db.VarChar(32)
+
+  shelter Shelter   @relation(fields: [shelterId], references: [id])
+  answers Answers[]
+}
+
+model Answers {
+  id          Int       @id @default(autoincrement())
+  id_question Int
+  answer      String?
+  createdAt   String    @map("created_at") @db.VarChar(32)
+  updatedAt   String?   @map("updated_at") @db.VarChar(32)
+  questions   Questions @relation(fields: [id_question], references: [id])
+}
+
 model Shelter {
   id              String   @id @default(uuid())
   name            String   @unique
@@ -107,6 +128,7 @@ model Shelter {
 
   shelterManagers ShelterManagers[]
   shelterSupplies ShelterSupply[]
+  Questions       Questions[]
 
   @@map("shelters")
 }
